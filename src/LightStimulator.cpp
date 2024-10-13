@@ -9,7 +9,6 @@
 // define led according to pin diagram in article
 const int buzzer = D0;                  // Buzzer unit
 const int mainLed = D1;                 // Main LED array
-const int led = D10;                    // there is no LED_BUILTIN available for the XIAO ESP32C3.
 const int switchIn = D6;                // User switch
 
 // Program constants
@@ -32,7 +31,6 @@ unsigned long lightTimerStart = 0;
 // the setup function runs once when you press reset or power the board
 void setup() {
   // initialize digital pin led as an output
-  pinMode(led, OUTPUT);
   pinMode(mainLed, OUTPUT);
   pinMode(buzzer, OUTPUT);
   pinMode(switchIn, INPUT);
@@ -90,11 +88,9 @@ void loop() {
   // Manage the state of the main LED
   if (lightState == 1) {
     digitalWrite(mainLed, HIGH);  // turn the main LED on
-    digitalWrite(led, HIGH);    // turn the LED on 
   }
   else {
     digitalWrite(mainLed, LOW);   // turn the main LED off
-    digitalWrite(led, LOW);     // turn the LED off
   }
 
   // Manage the light timer
