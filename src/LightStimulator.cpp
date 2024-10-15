@@ -40,27 +40,29 @@ void setup() {
 // the loop function runs over and over again until power down or resetkia
 void loop() {
 
+  delay(1); // Allows the serial port to squeeze in to upload code
+
   // Check the switch value & do switch debouncing and set start time
   int sw = digitalRead(switchIn);
   if (sw != switchState) {
     if (switchDebounceStartTime == 0) {
       // switch state just changed, start debouncing
-      switchDebounceStartTime = millis(); // Serial.print("Start debouncing\r\n");
+      switchDebounceStartTime = millis();  Serial.print("Start debouncing\r\n");
     } else if (millis() - switchDebounceStartTime >= switchDebounceTime) {
       // Switch state has stayed unchanged for for the debounce time. Record the change and act on it.
       switchDebounceStartTime = 0;
       switchStatePrev = switchState;
       switchState = sw;
-      //Serial.print("Debounced! Switch is ");
-      //Serial.print(switchState);
-      //Serial.print(" and previous state was ");
-      //Serial.println(switchStatePrev);
+      Serial.print("Debounced! Switch is ");
+      Serial.print(switchState);
+      Serial.print(" and previous state was ");
+      Serial.println(switchStatePrev);
       switchChanged = 1;
     }
   } else {
     // switch hasn't changed or bounced. Restart debouncer
     if (switchDebounceStartTime > 0) { 
-      //Serial.print("Bounce...\r\n"); 
+      Serial.print("Bounce...\r\n"); 
       switchDebounceStartTime = 0;
     }
   }
@@ -72,38 +74,38 @@ void loop() {
     if (switchState == 1) {
       Serial.println("Switch turned on.");
       if (lightState == 0) {
-        lightState = 1; //Serial.println("Turned the main LED on.");
+        lightState = 1; Serial.println("Turned the main LED on.");
         // Start the buzzer
         buzzerTimeStart = millis();
-        analogWrite(buzzer, buzzerTone); // Serial.println("Buzzer on.");
+        analogWrite(buzzer, buzzerTone); Serial.println("Buzzer on.");
         // Start the light timer
         lightTimerStart = millis();
       } else {
-        lightState = 0; // Serial.println("Turned the main LED off.");
-        lightTimerStart = 0; // Serial.println("Stopped the light timer.");
+        lightState = 0; Serial.println("Turned the main LED off.");
+        lightTimerStart = 0; Serial.println("Stopped the light timer.");
       }
-    } // else { Serial.println("Switch turned off."); }
+    } else { Serial.println("Switch turned off."); }
   }
   
   // Manage the state of the main LED
   if (lightState == 1) {
-    digitalWrite(mainLed, HIGH);  // turn the main LED on
+    digitalWrite(mainLed, HIGH); // turn the main LED on
   }
   else {
-    digitalWrite(mainLed, LOW);   // turn the main LED off
+    digitalWrite(mainLed, LOW); // turn the main LED off
   }
 
   // Manage the light timer
   if ((lightTimerStart > 0) && (millis() - lightTimerStart >= lightTimerMilliseconds)) {
-    lightTimerStart = millis(); // Serial.println("Restarted the light timer.");
+    lightTimerStart = millis(); Serial.println("Restarted the light timer.");
     analogWrite(buzzer, buzzerTone); // Turn the buzzer On
-    buzzerTimeStart = millis(); // Serial.println("Turned the  buzzer on.");
+    buzzerTimeStart = millis(); Serial.println("Turned the buzzer on.");
   }
 
   // Manage the buzzer operation
   if ((buzzerTimeStart > 0) && (millis() - buzzerTimeStart >= buzzTime)) {
     analogWrite(buzzer, 0);   // Turn the buzzer off
-    buzzerTimeStart = 0; // Serial.println("Buzzer off.");
+    buzzerTimeStart = 0; Serial.println("Buzzer off.");
   }
   
 }
